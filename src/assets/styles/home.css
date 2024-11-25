@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 25%;
+    background: #f4f4f4;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+}
+
+.editor {
+    flex-grow: 1;
+    padding: 20px;
+    background: #fff;
+}
+.file-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.file-item:hover {
+    background: #e6e6e6;
+}
+
+.file-item.active {
+    background: #ddd;
+    font-weight: bold;
+}
