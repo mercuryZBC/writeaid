@@ -67,4 +67,3 @@ export const updateKnowledgeBase = (kbId, kbName, kbDescription, isPublic) => {
         });
 }
 
-

@@ -33,10 +33,16 @@ apiWithDocument.interceptors.response.use(
     }
 );
 
-export const createDocument = (kb_id,doc_name) => {
-    return apiWithDocument.post("/knowledge/createKnowledgeBase",
+export const createDocument = (kb_id,doc_title) => {
+    return apiWithDocument.post("/document/createDocument",
         {
             "kb_id":kb_id,
-            "doc_name":doc_name,
+            "doc_title":doc_title,
         })
 }
+
+export const getDocumentListByKbId = (kb_id) => {
+    return apiWithDocument.get(`/document/getDocumentListByKbId/`+kb_id)
+}
+
+

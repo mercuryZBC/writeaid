@@ -12,7 +12,7 @@ function App() {
                 <Routes>
                     {/* 登录页面 */}
                     <Route path="/login" element={<LoginPage />} />
-                    {/* 主页 */}
+                     {/*主页*/}
                     <Route
                         path="/home"
                         element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}

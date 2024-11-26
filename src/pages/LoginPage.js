@@ -59,7 +59,7 @@ const LoginPage = () => {
     };
 
     useEffect(() => {
-        if(getToken !== ""){
+        if(getToken() !== ""){
             navigate("/home");
         }
         fetchCaptcha(); // 初始化时获取验证码

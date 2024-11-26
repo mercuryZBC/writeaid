@@ -22,9 +22,8 @@ const NewDocumentModal = ({ visible, onClose }) => {
                 message.error('获取知识库失败');
             }
         };
-
         fetchKnowledgeBases();
-    }, []);
+    }, [visible]);
 
     const handleCreateDocument = async () => {
         if (!selectedKB || !docName) {
@@ -34,6 +33,7 @@ const NewDocumentModal = ({ visible, onClose }) => {
 
         setLoading(true);
         try {
+            console.log(selectedKB.kb_id,docName);
             const response = await createDocument(selectedKB.kb_id,docName);
 
             if (response.status === 200) {

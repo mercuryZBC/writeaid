@@ -1,54 +1,72 @@
-import React, { useState } from 'react';
-import { Layout, Button, Avatar, Dropdown, Menu, Badge, message, Modal } from 'antd';
-import { FileAddOutlined, UploadOutlined, BellOutlined, PoweroffOutlined, UserOutlined, BookOutlined, FileTextOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Layout, Button, Avatar, Dropdown, Menu, Badge, message, Spin } from 'antd';
+import { FileAddOutlined, UploadOutlined, BellOutlined, PoweroffOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as jwt from "../util/jwt";
 import * as userService from "../services/userService";
 import NewModel from "./models/NewModel";
+
 const { Header } = Layout;
 
 const NavigatorBar = () => {
-    const navigate = useNavigate();  // 使用 useNavigate
-    const [isNewModalVisible, setIsNewModalVisible] = useState(false);  // 控制弹窗显示;
-    // 控制新建弹窗的显示
+    const navigate = useNavigate();
+    const [isNewModalVisible, setIsNewModalVisible] = useState(false);
+    const [username, setUsername] = useState(null); // 存储用户名
+    const [loading, setLoading] = useState(true); // 加载状态
+
+    // 获取用户信息
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await userService.getUserInfo();
+                if (response.status === 200) {
+                    setUsername(response.data['nickname'] || "未命名用户"); // 假设返回的用户名字段为 `username`
+                }
+            } catch (error) {
+                console.error("Failed to fetch user info:", error);
+                message.error("获取用户信息失败");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserInfo();
+    }, []);
+
     const showCreateModal = () => {
         setIsNewModalVisible(true);
     };
-    // 控制新建弹窗的关闭
+
     const handleCreateCancel = () => {
         setIsNewModalVisible(false);
     };
-    // 处理登出功能
+
     const handleLogout = async () => {
-        const response = await userService.getUserInfo();
-        try{
+        try {
+            const response = await userService.getUserInfo();
             if (response.status === 200) {
-                // 执行登出操作，比如清理本地存储、重定向到登录页面等
-                await userService.logoutRequest()
-                jwt.delToken()
+                await userService.logoutRequest();
+                jwt.delToken();
             }
-        }catch (error) {
-            if(error.response.status === 401){
+        } catch (error) {
+            if (error.response.status === 401) {
                 message.error(error.response.data?.error || "Failed to logout");
                 navigate('/login');
             }
         }
 
         console.log('Logging out...');
-        navigate('/login');  // 使用 navigate 进行页面跳转
+        navigate('/login');
     };
 
-    // 处理通知点击
     const handleNotificationClick = () => {
         console.log('Viewing notifications...');
     };
 
-    // 处理头像点击
     const handleAvatarClick = () => {
         console.log('Viewing profile...');
     };
 
-    // 用户头像的下拉菜单
     const userMenu = (
         <Menu>
             <Menu.Item onClick={handleAvatarClick} icon={<UserOutlined />}>
@@ -79,12 +97,19 @@ const NavigatorBar = () => {
 
             {/* 右侧按钮区域 */}
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                {/* 通知按钮 */}
-                <Badge count={5} onClick={handleNotificationClick}>
-                    <Button icon={<BellOutlined />} style={{ marginRight: '16px' }} />
+                <Badge count={5} style={{ marginRight: '16px' }}>
+                    <Button
+                        type="text"
+                        icon={<BellOutlined style={{ fontSize: '24px', color: '#08c'}} />}
+                        style={{ marginRight: '20px' }}
+                        onClick={handleNotificationClick}
+                    />
                 </Badge>
-
-                {/* 用户头像与下拉菜单 */}
+                {loading ? (
+                    <Spin size="small" style={{ marginRight: '8px' }} />
+                ) : (
+                    <span style={{ marginRight: '16px', fontWeight: 'bold' }}>{username}</span>
+                )}
                 <Dropdown overlay={userMenu} trigger={['click']}>
                     <Avatar
                         style={{ backgroundColor: '#87d068', cursor: 'pointer' }}
@@ -94,8 +119,9 @@ const NavigatorBar = () => {
                     />
                 </Dropdown>
             </div>
+
             {/* 创建弹窗 */}
-            <NewModel visable={isNewModalVisible} onClose={handleCreateCancel}/>
+            <NewModel visable={isNewModalVisible} onClose={handleCreateCancel} />
         </Header>
     );
 };
