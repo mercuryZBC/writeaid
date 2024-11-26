@@ -67,3 +67,6 @@ export const updateKnowledgeBase = (kbId, kbName, kbDescription, isPublic) => {
         });
 }
 
+export const getKnowledgeBaseDetail = (kbId) => {
+    return apiWithKnowledge.get(`/knowledge/${kbId}`);
+}

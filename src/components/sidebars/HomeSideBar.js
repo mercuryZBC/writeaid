@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Layout, Input, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import KnowledgeList from "./lists/KnowledgeList";
-import SearchModal from "./models/SearchModal";
+import KnowledgeList from "../lists/KnowledgeList";
+import SearchModal from "../models/SearchModal";
 
 const { Sider } = Layout;
 const { Title } = Typography;
 
-export const SideBar = () => {
+export const HomeSideBar = () => {
     const navigate = useNavigate();
     const [searchModalVisible, setSearchModalVisible] = useState(false);
 

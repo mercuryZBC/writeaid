@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import {getToken} from "./util/jwt";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import DocumentViewEditPage from "./pages/DocumentViewEditPage";
 
 function App() {
     const isAuthenticated = getToken() !== "";
@@ -17,6 +18,8 @@ function App() {
                         path="/home"
                         element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
                     />
+                    <Route path="/document/:docId" element={<DocumentViewEditPage />} />
+                    <Route path="/knowledgeBase/:kbId" element={<DocumentViewEditPage/>}/>
                     {/* 默认路由，未匹配时重定向到 /login */}
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>

@@ -6,7 +6,7 @@ const {Text } = Typography;
 
 
 
-export const Overview = () => {
+export const OverviewContent = () => {
     // 假设的最近文档数据
     const recentData = {
         edited: [

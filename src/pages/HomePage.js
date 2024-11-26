@@ -1,9 +1,8 @@
-import React, {createContext, useEffect, useState} from "react";
-import {Layout, Input, Button, Modal, Form, message} from "antd";
-import {Overview} from "../components/Overview"
-import {SideBar} from "../components/SideBar";
-import {MarkdownEditor} from "../components/MarkdownEditor"
-import {Router, useNavigate} from "react-router-dom";
+import React, {useEffect} from "react";
+import {Layout,message} from "antd";
+import {OverviewContent} from "../components/OverviewContent"
+import {HomeSideBar} from "../components/sidebars/HomeSideBar";
+import {useNavigate} from "react-router-dom";
 import * as userService from "../services/userService";
 import {ReloadProvider} from "../context/ReloadContext";
 import {delToken} from "../util/jwt";
@@ -14,21 +13,11 @@ const { Sider, Content } = Layout;
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [userInfo, setUserInfo] = useState({
-        userid: null,
-        nickname: "",
-        email:""
-    });
-
     useEffect(() => {
-        // 创建异步函数
+        // 确定当前用户是否已经登录，否则跳转到登录界面
         const fetchUserInfo = async () => {
             try {
                 const response = await userService.getUserInfo();
-                const data = response.data;
-                if (response.status === 200) {
-                    setUserInfo(data);
-                }
             } catch (error) {
                 if(error.response && error.response.status === 401) {
                     delToken();
@@ -48,12 +37,12 @@ const HomePage = () => {
            <ReloadProvider>
                {/* 左侧区域 */}
                <Sider width={300} theme="light" style={{ borderRight: "1px solid #f0f0f0" }}>
-                   <SideBar/>
+                   <HomeSideBar/>
                </Sider>
 
                {/* 右侧区域 */}
                <Content style={{ padding: "24px", background: "#fff" }}>
-                   <Overview/>
+                   <OverviewContent/>
                </Content>
            </ReloadProvider>
         </Layout>

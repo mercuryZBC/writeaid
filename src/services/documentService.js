@@ -42,7 +42,15 @@ export const createDocument = (kb_id,doc_title) => {
 }
 
 export const getDocumentListByKbId = (kb_id) => {
-    return apiWithDocument.get(`/document/getDocumentListByKbId/`+kb_id)
+    return apiWithDocument.get(`/document/getDocumentListByKbId/${kb_id}`)
+}
+
+export const getDocumentById = (doc_id) => {
+    return apiWithDocument.get(`/document/getDocument/${doc_id}`)
+}
+
+export const deleteDocument = (doc_id) => {
+    return apiWithDocument.delete(`/document/deleteDocument/${doc_id}`)
 }
 
 

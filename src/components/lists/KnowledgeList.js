@@ -3,18 +3,26 @@ import { Collapse, Button, Popover, Menu, message } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { deleteKnowledgeBase, getKnowledgeBaseList } from "../../services/knowledgeService";
 import DocumentListDrawer from "./DocumentListDrawer";
+import {useNavigate} from "react-router-dom";
+import {useReloadContext} from "../../context/ReloadContext";
 
 const { Panel } = Collapse;
 
 const KnowledgeListWithCollapse = () => {
     const [knowledgeList, setKnowledgeList] = useState([]);
-
+    const {kbListReloadTrigger, setkbListReloadTrigger} = useReloadContext();
+    const navigate = useNavigate();
     // 获取知识库列表
     const fetchKnowledgeBaseList = async () => {
         try {
             const response = await getKnowledgeBaseList();
             if (response.status === 200) {
-                setKnowledgeList(response.data.knowledge_bases);
+                if(response.data.knowledge_bases){
+                    setKnowledgeList(response.data.knowledge_bases);
+                }else{
+                    setKnowledgeList([]);
+                }
+
             } else {
                 message.error("知识库拉取失败");
             }
@@ -25,14 +33,15 @@ const KnowledgeListWithCollapse = () => {
 
     useEffect(() => {
         fetchKnowledgeBaseList();
-    }, []);
+    }, [kbListReloadTrigger]);
 
     const KBListButtonItem = ({ kb }) => {
         const [popoverVisible, setPopoverVisible] = useState(false);
         const [drawerVisible, setDrawerVisible] = useState(false);
 
         const onSelectKnowledgeBase = () => {
-            setDrawerVisible(true);
+            // setDrawerVisible(true);
+            navigate(`/knowledgeBase/${kb.kb_id}`)
         };
 
         // 删除知识库
