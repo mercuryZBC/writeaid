@@ -23,7 +23,7 @@ const HomePage = () => {
                     delToken();
                     navigate('/login')
                 }else{
-                    message.error(error.response?.data?.error || "获取用户数据失败");
+                    // message.error(error.response?.data?.error || "获取用户数据失败");
                 }
             }
         };

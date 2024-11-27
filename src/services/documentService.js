@@ -53,4 +53,15 @@ export const deleteDocument = (doc_id) => {
     return apiWithDocument.delete(`/document/deleteDocument/${doc_id}`)
 }
 
+export const updateDocumentById = (doc_id, doc_file_form_data) => {
+    return apiWithDocument.put(`/document/updateDocument/${doc_id}`, doc_file_form_data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+};
+
+export const getRecentViewDocuments = (start,offset) =>{
+    return apiWithDocument.get(`/document/recentViewDocument?start=${start}&offset=${offset}`);
+}
 
