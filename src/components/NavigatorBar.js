@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import * as jwt from "../util/jwt";
 import * as userService from "../services/userService";
 import NewModel from "./models/NewModel";
+import {delToken} from "../util/jwt";
 
 const { Header } = Layout;
 
@@ -23,8 +24,12 @@ const NavigatorBar = () => {
                     setUsername(response.data['nickname'] || "未命名用户"); // 假设返回的用户名字段为 `username`
                 }
             } catch (error) {
-                console.error("Failed to fetch user info:", error);
-                message.error("获取用户信息失败");
+                if(error.response && error.response.status === 401) {
+                    delToken();
+                    navigate('/login')
+                }else{
+                    message.error(error.response?.data?.error || "获取用户数据失败");
+                }
             } finally {
                 setLoading(false);
             }

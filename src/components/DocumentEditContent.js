@@ -1,12 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 import Vditor from "vditor";
 import "vditor/dist/index.css";
-import {message} from "antd";
+import {message, Spin} from "antd";
 import {getDocumentById, updateDocumentById} from "../services/documentService";
 
 const DocumentEditContent = ({docId}) => {
+    // 创建一个可变对象：useRef创建的对象会在组件的整个生命周期保持不变，他返回一个.current属性的对象，可以随时读写该属性的值
+    // 不会触发重新渲染
+    // 常用于存储不需要触发重新渲染的对象，比如DOM，第三方库实例等
     const vditorRef = useRef(null); // 用于存储 Vditor 实例
     const [content, setContent] = useState(null);
+    const [loading,setLoading] = useState(false);
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -18,6 +22,8 @@ const DocumentEditContent = ({docId}) => {
             if (response.status === 200) {
                 const data = response.data;
                 setContent(data.doc_content);
+                console.log(data.doc_content);
+                setLoading(false);
             } else {
                 message.error("文档信息拉取失败");
             }
@@ -51,7 +57,9 @@ const DocumentEditContent = ({docId}) => {
     useEffect(() => {
         console.log(docId);
         if(docId){
-            fetchDocumentData();
+            setTimeout(()=>{
+                fetchDocumentData();
+            },60);
         }
     }, [docId]);
     useEffect(() => {
@@ -81,6 +89,14 @@ const DocumentEditContent = ({docId}) => {
 
             }
         }, 50);
+
+        return () => {
+            if (vditorRef.current) {
+                vditorRef.current.destroy();
+                vditorRef.current = null;
+            }
+        }
+
     },[]);
 
     useEffect(() => {
@@ -115,15 +131,17 @@ const DocumentEditContent = ({docId}) => {
     },[content]); // 当 content 变化时，重新设置监听
 
     return (
-        <div
-            id="vditor"
-            style={{
-                width: `${dimensions.width * 1.2}px`,   // 宽度为当前窗口宽度的 120%
-                height: `${dimensions.height * 1.2}px`, // 高度为当前窗口高度的 120%
-                margin: "20px",
-                overflow: "hidden",  // 防止溢出
-            }}
-        />
+        <Spin spinning={loading} tip="文档加载中..." size="large">
+            <div
+                id="vditor"
+                style={{
+                    width: `${dimensions.width * 1.2}px`,   // 宽度为当前窗口宽度的 120%
+                    height: `${dimensions.height * 1.2}px`, // 高度为当前窗口高度的 120%
+                    margin: "20px",
+                    overflow: "hidden",  // 防止溢出
+                }}
+            />
+        </Spin>
     );
 };
 

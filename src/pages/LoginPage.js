@@ -12,6 +12,7 @@ const LoginPage = () => {
     const [captchaId, setCaptchaId] = useState(""); // 存储验证码ID
     const [captchaImage, setCaptchaImage] = useState(""); // 存储验证码图片
     const [captchaType, setCaptchaType] = useState("login"); // 验证码类型：登录或注册
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     // 获取验证码
     const fetchCaptcha = async () => {
@@ -34,7 +35,7 @@ const LoginPage = () => {
                 message.success("登录成功！");
                 const data = response.data;
                 setToken(data['access_token'],data['expires_in'])
-                navigate('/home')
+                setIsLoggedIn(true);
             }
         } catch (error) {
             message.error(error.response?.data?.error || "Failed to login");
@@ -57,11 +58,17 @@ const LoginPage = () => {
             message.error("两次密码输入不一致！");
         }
     };
-
     useEffect(() => {
         if(getToken() !== ""){
+            setIsLoggedIn(true);
+        }
+    },[]);
+    useEffect(() =>{
+        if(isLoggedIn === true){
             navigate("/home");
         }
+    },[isLoggedIn]);
+    useEffect(() => {
         fetchCaptcha(); // 初始化时获取验证码
     }, [captchaType]);
 
