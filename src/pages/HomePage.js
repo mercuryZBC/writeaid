@@ -17,11 +17,12 @@ const HomePage = () => {
         // 确定当前用户是否已经登录，否则跳转到登录界面
         const fetchUserInfo = async () => {
             try {
-                const response = await userService.getUserInfo();
+                await userService.getUserInfo();
             } catch (error) {
                 if(error.response && error.response.status === 401) {
                     delToken();
                     navigate('/login')
+                    console.log('1111111111')
                 }else{
                     message.error(error.response?.data?.error || "获取用户数据失败");
                 }
@@ -30,7 +31,7 @@ const HomePage = () => {
 
         // 调用异步函数
         fetchUserInfo();
-    }, []); // 依赖数组为空，表示只在组件挂载时运行
+    }, [navigate]); // 依赖数组为空，表示只在组件挂载时运行
 
     return (
         <Layout style={{ height: "100vh" }}>

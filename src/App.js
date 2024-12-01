@@ -1,28 +1,54 @@
 import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import {getToken} from "./util/jwt";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DocumentViewPage from "./pages/DocumentViewPage";
 import DocumentEditPage from "./pages/DocumentEditPage";
+import ProtectedRoute from "./router/ProtectedRoute";
 
 function App() {
-    const isAuthenticated = getToken() !== "";
     return (
         <div>
             <BrowserRouter>
                 <Routes>
                     {/* 登录页面 */}
                     <Route path="/login" element={<LoginPage />} />
-                     {/*主页*/}
+
+                    {/* 受保护的路由 */}
                     <Route
                         path="/home"
-                        element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
+                        element={
+                            <ProtectedRoute>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
                     />
-                    <Route path="/document/:docId" element={<DocumentViewPage />} />
-                    <Route path="/knowledgeBase/:kbId" element={<DocumentViewPage/>}/>
-                    <Route path="/editDocument/:docId" element={<DocumentEditPage />}/>
-                    {/* 默认路由，未匹配时重定向到 /login */}
+                    <Route
+                        path="/document/:docId"
+                        element={
+                            <ProtectedRoute>
+                                <DocumentViewPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/knowledgeBase/:kbId"
+                        element={
+                            <ProtectedRoute>
+                                <DocumentViewPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/editDocument/:docId"
+                        element={
+                            <ProtectedRoute>
+                                <DocumentEditPage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* 默认路由，未匹配时重定向到 /home */}
                     <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
             </BrowserRouter>

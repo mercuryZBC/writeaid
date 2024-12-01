@@ -35,8 +35,13 @@ export const OverviewContent = () => {
         try {
             const response = await getRecentViewDocuments(0, 10);
             if (response.status === 200) {
-                const recent_docs = parseData(response.data.recent_docs);
-                setRecentViewDocList(recent_docs);
+                if(response.data.recent_docs == null) {
+                    setRecentViewDocList([]);
+                } else{
+                    const recent_docs = parseData(response.data.recent_docs);
+                    console.log(recent_docs);
+                    setRecentViewDocList(recent_docs);
+                }
             } else {
                 message.error("系统错误，最近浏览文档获取失败");
             }

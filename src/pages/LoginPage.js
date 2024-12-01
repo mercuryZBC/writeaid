@@ -59,15 +59,15 @@ const LoginPage = () => {
         }
     };
     useEffect(() => {
-        if(getToken() !== ""){
-            setIsLoggedIn(true);
+        if (getToken()) {
+            setIsLoggedIn(true); // 如果存在 Token，直接设置为已登录
         }
-    },[]);
+    }, []); // 只在组件挂载时执行一次
     useEffect(() =>{
         if(isLoggedIn === true){
             navigate("/home");
         }
-    },[isLoggedIn]);
+    },[isLoggedIn,navigate]);
     useEffect(() => {
         fetchCaptcha(); // 初始化时获取验证码
     }, [captchaType]);
