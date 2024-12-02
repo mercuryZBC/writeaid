@@ -1,7 +1,7 @@
 import { Avatar, List, message, Tabs, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import NavigatorBar from "./NavigatorBar";
-import { getRecentViewDocuments } from "../services/documentService";
+import {getRecentCommentDocuments, getRecentEditDocuments, getRecentViewDocuments} from "../services/documentService";
 import { FileOutlined } from "@ant-design/icons"; // 使用文档图标
 
 const { TabPane } = Tabs;
@@ -50,8 +50,47 @@ export const OverviewContent = () => {
         }
     };
 
+    const fetchRecentEditDocuments = async () => {
+        try {
+            const response = await getRecentEditDocuments(0, 10);
+            if (response.status === 200) {
+                if(response.data.recent_docs == null) {
+                    setRecentEditDocList([]);
+                } else{
+                    const recent_docs = parseData(response.data.recent_docs);
+                    console.log(recent_docs);
+                    setRecentEditDocList(recent_docs);
+                }
+            } else {
+                message.error("系统错误，最近编辑文档获取失败");
+            }
+        } catch (error) {
+            message.error(error?.response?.data?.error || "系统错误，最近编辑文档获取失败");
+        }
+    };
+
+    const fetchRecentCommentDocuments = async () => {
+        try {
+            const response = await getRecentCommentDocuments(0, 10);
+            if (response.status === 200) {
+                if(response.data.recent_docs == null) {
+                    setRecentCommentDocList([]);
+                } else{
+                    const recent_docs = parseData(response.data.recent_docs);
+                    console.log(recent_docs);
+                    setRecentCommentDocList(recent_docs);
+                }
+            } else {
+                message.error("系统错误，最近评论文档获取失败");
+            }
+        } catch (error) {
+            message.error(error?.response?.data?.error || "系统错误，最近评论文档获取失败");
+        }
+    };
+
     useEffect(() => {
         fetchRecentViewDocuments();
+        fetchRecentEditDocuments();
     }, []);
 
     // 渲染列表项

@@ -56,7 +56,7 @@ const DocumentViewContent = ({ docId }) => {
                     <ReactMarkdown>{content}</ReactMarkdown>
                 </div>
                 <div style={{flex: 4, overflow: "auto", padding: "20px", backgroundColor: "#fafafa"}}>
-                    <CommentSection/>
+                    <CommentSection docId={docId} />
                 </div>
             </div>
             {/* 评论区域 */}

@@ -65,3 +65,11 @@ export const getRecentViewDocuments = (start,offset) =>{
     return apiWithDocument.get(`/document/recentViewDocument?start=${start}&offset=${offset}`);
 }
 
+export const getRecentEditDocuments = (start,offset) =>{
+    return apiWithDocument.get(`/document/recentEditDocument?start=${start}&offset=${offset}`);
+}
+
+export const getRecentCommentDocuments = (start,offset) =>{
+    return apiWithDocument.get(`/document/recentCommentDocument?start=${start}&offset=${offset}`);
+}
+
