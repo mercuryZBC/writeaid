@@ -65,6 +65,6 @@ export const replyDocumentComment = (rootId,parentId,docId,commentContent) =>{
     })
 }
 
-export const getChildrenComment = (parentId) =>{
-    return apiWithComment.get(`/comment/getChildrenComment/${parentId}`)
+export const getChildrenComment = (rootId) =>{
+    return apiWithComment.get(`/comment/getChildrenComment/${rootId}`)
 }
