@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Input, Typography } from "antd";
+import { Layout, Button, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import KnowledgeList from "../lists/KnowledgeList";
@@ -15,6 +15,11 @@ export const HomeSideBar = () => {
     const handleNavigateHome = () => {
         navigate("/home");
     };
+
+    const handleOpenSearch = () => {
+        setSearchModalVisible(true);
+    };
+
     return (
         <Sider
             width={300}
@@ -33,7 +38,6 @@ export const HomeSideBar = () => {
                     display: "flex",
                     alignItems: "center",
                     padding: "16px",
-                    gap: "8px",
                     backgroundColor: "#fafafa",
                     borderTopLeftRadius: "8px",
                     borderTopRightRadius: "8px",
@@ -51,15 +55,17 @@ export const HomeSideBar = () => {
                 >
                     WriteAid
                 </Title>
-                <Input.Search
-                    placeholder="搜索知识库/文档"
-                    enterButton={<SearchOutlined />}
-                    onSearch={() => setSearchModalVisible(true)}
+                <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    onClick={handleOpenSearch}
                     style={{
-                        flex: 1,
+                        marginLeft: "auto", // 将按钮推到右侧
                         borderRadius: "4px",
                     }}
-                />
+                >
+                    搜索
+                </Button>
             </div>
 
             {/* 知识库列表 */}

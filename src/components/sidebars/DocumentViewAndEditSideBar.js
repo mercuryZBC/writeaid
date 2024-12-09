@@ -188,7 +188,7 @@ const DocumentViewAndEditSideBar = ({ kbId, docId }) => {
             {/* 新建文档模态框 */}
             <Modal
                 title="新建文档"
-                visible={isModalVisible}
+                open={isModalVisible}
                 onCancel={handleCancel}
                 onOk={handleCreateDocument}
             >
