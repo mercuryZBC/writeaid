@@ -1,5 +1,5 @@
 import { Layout, message } from "antd";
-import { ReloadProvider } from "../context/ReloadContext";
+import { ReloadProvider } from "../contexts/ReloadContext";
 import DocumentViewAndEditSideBar from "../components/sidebars/DocumentViewAndEditSideBar";
 import { useLocation } from "react-router-dom";
 import DocumentEditContent from "../components/DocumentEditContent";

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Input, Checkbox, Button, message } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
 import * as documentService from "../../services/knowledgeService";
-import {useReloadContext} from "../../context/ReloadContext";
+import {useReloadContext} from "../../contexts/ReloadContext";
 
 const NewKnowledgeBaseModal = ({ visible, onCancel}) => {
     const [knowledgeBaseName, setKnowledgeBaseName] = useState('');
@@ -12,6 +12,7 @@ const NewKnowledgeBaseModal = ({ visible, onCancel}) => {
     const {kbListReloadTrigger, setkbListReloadTrigger} = useReloadContext();
     // 提交创建知识库
     const handleCreate = async () => {
+        onCancel();
         if (!knowledgeBaseName) {
             message.error('请输入知识库名');
             return;
@@ -57,7 +58,7 @@ const NewKnowledgeBaseModal = ({ visible, onCancel}) => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <BookOutlined style={{ marginRight: '8px' }} />
                     <Input.TextArea
-                        placeholder="请输入知识库简介"
+                        placeholder="请输入知识库简介（可选）"
                         value={knowledgeBaseDescription}
                         onChange={(e) => setKnowledgeBaseDescription(e.target.value)}
                         rows={4}  // 设置显示的行数

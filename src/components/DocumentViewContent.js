@@ -5,33 +5,63 @@ import { LikeOutlined, LikeFilled, EditOutlined } from "@ant-design/icons";
 
 // 模块化的组件
 import CommentSection from "./CommentSection";
-import { getDocumentById } from "../services/documentService";
+import {getDocumentById, getDocumentContentHash} from "../services/documentService";
 import {useNavigate} from "react-router-dom";
+import {DocumentProvider, useDocumentContext} from "../contexts/DocumentContext";
+import {addDocumentToDB, clearDocumentsFromDB, getDocumentByDocIdFromDB} from "../localStorage/documentIDB";
+import {calculateSHA256} from "../util/util";
 
 const DocumentViewContent = ({ docId }) => {
     const [content, setContent] = useState(null); // Markdown 内容
-    const [isEditing, setIsEditing] = useState(false); // 编辑状态
     const [likes, setLikes] = useState(0); // 点赞数
     const [liked, setLiked] = useState(false); // 是否已点赞
     const navigate = useNavigate();
     // 获取文档内容
-    const fetchDocumentData = async () => {
+    const fetchDocument = async () =>{
         try {
             const response = await getDocumentById(docId);
             if (response.status === 200) {
                 const data = response.data;
                 setContent(data.doc_content);
+                const document = {
+                    doc_id: data.doc_id,
+                    doc_title: data.doc_title,
+                    doc_content: data.doc_content,
+                    doc_content_hash: await calculateSHA256(data.doc_content)
+                };
+                await addDocumentToDB(document);
             } else {
                 message.error("文档信息拉取失败");
             }
         } catch (error) {
             message.error(error.response?.data?.error || "文档信息拉取失败");
         }
+    }
+    const DocumentLoader = async () => {
+        const documentCache = await getDocumentByDocIdFromDB(docId);
+        if(documentCache == null) {
+            await fetchDocument();
+        }else {
+            try{
+                const response = await getDocumentContentHash(docId);
+                if (response.status === 200) {
+                    if(response.data["doc_content_hash"] === documentCache.doc_content_hash){
+                        setContent(documentCache.doc_content);
+                    }else{
+                        await fetchDocument(documentCache.doc_id);
+                    }
+                } else {
+                    message.error("文档信息拉取失败");
+                }
+            }catch (error) {
+                message.error(error.response?.data?.error || "文档信息拉取失败");
+            }
+        }
     };
 
     useEffect(() => {
         if (docId) {
-            fetchDocumentData();
+            DocumentLoader();
         }
     }, [docId]);
 

@@ -73,3 +73,6 @@ export const getRecentCommentDocuments = (start,offset) =>{
     return apiWithDocument.get(`/document/recentCommentDocument?start=${start}&offset=${offset}`);
 }
 
+export const getDocumentContentHash = (docId) =>{
+    return apiWithDocument.get(`/document/documentContentHash/${docId}`)
+}
