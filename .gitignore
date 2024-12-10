@@ -12,7 +12,7 @@
 
 # production
 /writeaid-frontend/build
-/.idea
+.idea
 # misc
 .DS_Store
 /writeaid-backend/.DS_Store
