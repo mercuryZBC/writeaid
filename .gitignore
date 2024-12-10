@@ -14,7 +14,7 @@
 /writeaid-frontend/build
 /.idea
 # misc
-/.DS_Store
+.DS_Store
 /writeaid-backend/.DS_Store
 /writeaid-backend/.idea
 
