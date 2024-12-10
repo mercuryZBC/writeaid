@@ -1,29 +1,21 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-/writeaid-backend/service-base/data
-
-# dependencies
-/writeaid-frontend/node_modules
-/writeaid-frontend/.pnp
-/writeaid-frontend/.pnp.js
-
-# testing
-/writeaid-frontend/coverage
-
-# production
-/writeaid-frontend/build
-.idea
-# misc
+# Ignore macOS system files
 .DS_Store
-/writeaid-backend/.DS_Store
-/writeaid-backend/.idea
 
-/writeaid-frontend/.DS_Store
-/writeaid-frontend/.env.local
-/writeaid-frontend/.env.development.local
-/writeaid-frontend/.env.test.local
-/writeaid-frontend/.env.production.local
-/writeaid-frontend/.idea
+# Ignore IDE files
+.idea
+
+# Backend-specific ignore rules
+/writeaid-backend/service-base/data/
+/writeaid-backend/.env*
+/writeaid-backend/npm-debug.log*
+/writeaid-backend/yarn-debug.log*
+/writeaid-backend/yarn-error.log*
+
+# Frontend-specific ignore rules
+/writeaid-frontend/node_modules/
+/writeaid-frontend/coverage/
+/writeaid-frontend/build/
+/writeaid-frontend/.env*
 /writeaid-frontend/npm-debug.log*
 /writeaid-frontend/yarn-debug.log*
 /writeaid-frontend/yarn-error.log*
