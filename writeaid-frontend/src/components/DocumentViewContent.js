@@ -7,9 +7,11 @@ import { LikeOutlined, LikeFilled, EditOutlined } from "@ant-design/icons";
 import CommentSection from "./CommentSection";
 import {getDocumentById, getDocumentContentHash} from "../services/documentService";
 import {useNavigate} from "react-router-dom";
-import {DocumentProvider, useDocumentContext} from "../contexts/DocumentContext";
-import {addDocumentToDB, clearDocumentsFromDB, getDocumentByDocIdFromDB} from "../localStorage/documentIDB";
+import {addDocumentToDB, getDocumentByDocIdFromDB} from "../localStorage/documentIDB";
 import {calculateSHA256} from "../util/util";
+import remarkGfm from "remark-gfm";
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {dracula} from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 const DocumentViewContent = ({ docId }) => {
     const [content, setContent] = useState(null); // Markdown 内容
@@ -83,7 +85,32 @@ const DocumentViewContent = ({ docId }) => {
             <div style={{flex: 10, overflow: "auto", padding: "20px"}}>
                 {/*预览区域*/}
                 <div style={{ paddingBottom: "100px" }}>
-                    <ReactMarkdown>{content}</ReactMarkdown>
+                    <ReactMarkdown
+                        children={content}
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                            img({ src, alt, ...props }) {
+                                return <img src={src} alt={alt} {...props} />;
+                            },
+                            code({ node, inline, className, children, ...props }) {
+                                const match = /language-(\w+)/.exec(className || '');
+                                return !inline && match ? (
+                                    <SyntaxHighlighter
+                                        style={dracula}
+                                        language={match[1]}
+                                        PreTag="div"
+                                        {...props}
+                                    >
+                                        {String(children).replace(/\n$/, '')}
+                                    </SyntaxHighlighter>
+                                ) : (
+                                    <code className={className} {...props}>
+                                        {children}
+                                    </code>
+                                );
+                            },
+                        }}
+                    />
                 </div>
                 <div style={{flex: 4, overflow: "auto", padding: "20px", backgroundColor: "#fafafa"}}>
                     <CommentSection docId={docId} />
