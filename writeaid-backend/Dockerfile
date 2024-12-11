@@ -11,10 +11,10 @@ COPY . .
 
 # 下载依赖并构建应用
 RUN go mod tidy
-RUN go build -o service-base ./service-base/cmd/app/
+RUN go build -o base ./service-base/cmd/app/
 
 # 暴露端口
 EXPOSE 8000
 
 # 运行应用
-CMD ["./service-base"]
+CMD ["./base"]

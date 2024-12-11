@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8"
 	"log"
 	"sync"
 	"yuqueppbackend/service-base/config"
+
+	"github.com/elastic/go-elasticsearch/v8"
 )
 
 var esClient *elasticsearch.Client
@@ -58,21 +59,58 @@ func checkAndCreateIndex(es *elasticsearch.Client, indexName string) error {
 
 	if res.StatusCode == 404 { // 索引不存在
 		// 2. 创建索引
-		mapping := map[string]interface{}{
-			"settings": map[string]interface{}{
-				"number_of_shards":   1,
-				"number_of_replicas": 1,
-			},
-			"mappings": map[string]interface{}{
-				"properties": map[string]interface{}{
-					"title": map[string]interface{}{
-						"type": "text",
-					},
-					"created_at": map[string]interface{}{
-						"type": "date",
+
+		var mapping map[string]interface{}
+		switch indexName {
+		//"id":      docIdStr,
+		//"title":   document.Title,
+		//"content": content,
+		case "document":
+			mapping = map[string]interface{}{
+				"mappings": map[string]interface{}{
+					"properties": map[string]interface{}{
+						"id": map[string]interface{}{
+							"type":  "text",
+							"index": false,
+						},
+						"title": map[string]interface{}{
+							"type":     "text",
+							"index":    true,
+							"analyzer": "standard",
+						},
+						"content": map[string]interface{}{
+							"type":     "text",
+							"index":    true,
+							"analyzer": "standard",
+						},
 					},
 				},
-			},
+			}
+		case "knowledgebase":
+			//"kb_id":          strKbId,
+			//"kb_name":        kb.Name,
+			//"kb_description": kb.Description,
+			mapping = map[string]interface{}{
+				"mappings": map[string]interface{}{
+					"properties": map[string]interface{}{
+						"kb_id": map[string]interface{}{
+							"type":  "text",
+							"index": false,
+						},
+						"kb_name": map[string]interface{}{
+							"type":     "text",
+							"index":    true,
+							"analyzer": "standard",
+						},
+						"kb_description": map[string]interface{}{
+							"type":     "text",
+							"index":    true,
+							"analyzer": "standard",
+						},
+					},
+				},
+			}
+
 		}
 		mappingBytes, _ := json.Marshal(mapping)
 

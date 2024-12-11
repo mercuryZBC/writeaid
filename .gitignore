@@ -3,9 +3,10 @@
 
 # Ignore IDE files
 .idea
-
+/es
+/writeaid-frontend/.idea/
 # Backend-specific ignore rules
-/writeaid-backend/service-base/data/
+/writeaid-backend/data
 /writeaid-backend/.env*
 /writeaid-backend/npm-debug.log*
 /writeaid-backend/yarn-debug.log*

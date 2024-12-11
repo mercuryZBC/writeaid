@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Input, message, List, Typography, Row, Col, Space, Button } from "antd";
+import { Modal, Input, message, List, Typography, Row, Col, Space, Button, Avatar } from "antd";
 import { personalDocumentSearch, personalKnowledgeSearch } from "../../services/searchService";
 import { FileOutlined, BookOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";  // 导入 useNavigate
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const SearchModal = ({ visible, onClose }) => {
     const [searchText, setSearchText] = useState("");
@@ -17,10 +17,11 @@ const SearchModal = ({ visible, onClose }) => {
             handleSearch();
         }
     }, [searchText]);
+
     const handleCloseSearch = () => {
         setSearchText("");
         onClose();
-    }
+    };
 
     const handleSearch = async () => {
         try {
@@ -36,7 +37,7 @@ const SearchModal = ({ visible, onClose }) => {
             if (documentsResponse.status === 200) {
                 setKnowledgeList(documentsResponse.data.knowledgeBases || []);
             }
-        }catch (error) {
+        } catch (error) {
             message.error(error.response?.data?.error || "搜索失败，请稍后再试");
         }
     };
@@ -70,36 +71,29 @@ const SearchModal = ({ visible, onClose }) => {
             <div>
                 <Title level={4}>匹配的文档</Title>
                 <List
-                    bordered
+                    itemLayout="horizontal"
                     dataSource={documentList}
                     renderItem={(item) => (
-                        <List.Item>
-                            <Button
-                                type="link"
-                                style={{ width: "100%", textAlign: "left" }}
-                                onClick={() => handleDocumentClick(item.doc_id)}  // 点击跳转到文档详情
-                            >
-                                <Row style={{ width: "100%" }} gutter={16}>
-                                    <Col>
-                                        <FileOutlined style={{ fontSize: 24, color: "#1890ff" }} />
-                                    </Col>
-                                    <Col span={18}>
-                                        <Space direction="vertical" size={4}>
-                                            <Typography.Text strong>
-                                                {item.doc_title}
-                                            </Typography.Text>
-                                            <Typography.Text type="secondary">
-                                                {item.kb_name || "无知识库"}
-                                            </Typography.Text>
-                                        </Space>
-                                    </Col>
-                                    <Col flex="none">
-                                        <Typography.Text type="secondary">
-                                            {new Date(item.doc_created_at).toLocaleString()}
-                                        </Typography.Text>
-                                    </Col>
-                                </Row>
-                            </Button>
+                        <List.Item
+                            onClick={() => handleDocumentClick(item.doc_id)}
+                            style={{
+                                cursor: "pointer",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <Avatar icon={<FileOutlined style={{ fontSize: 20, color: "#1890ff" }} />} />
+                                <div style={{ marginLeft: 12 }}>
+                                    <Text strong>{item.doc_title}</Text>
+                                    <br />
+                                    <Text type="secondary">{item.kb_name || "无知识库"}</Text>
+                                </div>
+                            </div>
+                            <Text type="secondary">
+                                {new Date(item.doc_created_at).toLocaleString()}
+                            </Text>
                         </List.Item>
                     )}
                 />
@@ -109,33 +103,27 @@ const SearchModal = ({ visible, onClose }) => {
             <div style={{ marginTop: 24 }}>
                 <Title level={4}>匹配的知识库</Title>
                 <List
-                    bordered
+                    itemLayout="horizontal"
                     dataSource={knowledgeList}
                     renderItem={(item) => (
-                        <List.Item>
-                            <Button
-                                type="link"
-                                style={{ width: "100%", textAlign: "left" }}
-                                onClick={() => handleKnowledgeClick(item.kb_id)}  // 点击跳转到知识库详情
-                            >
-                                <Row style={{ width: "100%" }} gutter={16}>
-                                    <Col>
-                                        <BookOutlined style={{ fontSize: 24, color: "#1890ff" }} />
-                                    </Col>
-                                    <Col span={18}>
-                                        <Space direction="vertical" size={4}>
-                                            <Typography.Text strong>
-                                                {item.kb_name}
-                                            </Typography.Text>
-                                        </Space>
-                                    </Col>
-                                    <Col>
-                                        <Typography.Text type="secondary">
-                                            {new Date(item.kb_created_at).toLocaleString()}  {/* 假设有创建时间字段 */}
-                                        </Typography.Text>
-                                    </Col>
-                                </Row>
-                            </Button>
+                        <List.Item
+                            onClick={() => handleKnowledgeClick(item.kb_id)}
+                            style={{
+                                cursor: "pointer",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <Avatar icon={<BookOutlined style={{ fontSize: 20, color: "#1890ff" }} />} />
+                                <div style={{ marginLeft: 12 }}>
+                                    <Text strong>{item.kb_name}</Text>
+                                </div>
+                            </div>
+                            <Text type="secondary">
+                                {new Date(item.kb_created_at).toLocaleString()}
+                            </Text>
                         </List.Item>
                     )}
                 />

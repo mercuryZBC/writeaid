@@ -54,8 +54,8 @@ services:
       - xpack.security.enabled=false  # 关闭安全认证
       - xpack.security.http.ssl.enabled=false
     volumes:
-      - es_data:/usr/share/elasticsearch/data
-      - /etc/localtime:/etc/localtime:ro
+      - ../es/data:/usr/share/elasticsearch/data
+      - ../es/plugins:/usr/share/elasticsearch/plugins
     restart: always
 
 volumes:
