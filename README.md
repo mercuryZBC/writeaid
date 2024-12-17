@@ -5,10 +5,15 @@
 前端：使用React 框架与 Ant Design UI组件库进行开发
 后端：
 开发语言：Go
+
 web开发框架：Gin
+
 orm框架：Gorm
+
 数据库：Mysql
+
 缓存：Redis
+
 搜索引擎：ElasticSearch
 ## 项目部署
 本项目支持不是在Linux平台或MacOS平台，在部署前用户需要安装docker，docker-compose，nodejs，npm
@@ -16,6 +21,7 @@ orm框架：Gorm
 #执行一键部署脚本
 ./deploy.sh
 ```
+大家可以随时提issue，共同开发和完善该项目。有部署上的问题也可以联系我，本人QQ：2950206203
 ## 项目图片
 Dashboard页面
 <img width="1697" alt="image" src="https://github.com/user-attachments/assets/0f10be39-4a76-408a-8f35-6ffd7f43789e">
