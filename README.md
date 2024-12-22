@@ -22,6 +22,15 @@ orm框架：Gorm
 ./deploy.sh
 ```
 大家可以随时提issue，共同开发和完善该项目。有部署上的问题也可以联系我，本人QQ：2950206203
+## 项目架构
+本项目分为接入层，用户鉴权层，微服务层
+
+接入层主要实现支持api接入，网关服务，以及负载均衡。
+
+用户鉴权层采用jwt实现权限校验。
+
+微服务层将各个服务进行划分。
+![image](https://github.com/user-attachments/assets/2b063fb0-f30c-4a1e-a560-0922b194fcd4)
 ## 项目图片
 Dashboard页面
 <img width="1697" alt="image" src="https://github.com/user-attachments/assets/0f10be39-4a76-408a-8f35-6ffd7f43789e">
