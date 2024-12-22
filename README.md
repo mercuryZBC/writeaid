@@ -29,7 +29,8 @@ orm框架：Gorm
 
 用户鉴权层采用jwt实现权限校验。
 
-微服务层将各个服务进行划分。
+微服务层将用户服务、搜索服务、知识库服务、文档服务、消息推送服务、评论服务进行划分。
+
 ![image](https://github.com/user-attachments/assets/2b063fb0-f30c-4a1e-a560-0922b194fcd4)
 ## 项目图片
 Dashboard页面
@@ -40,5 +41,8 @@ Dashboard页面
 <img width="1692" alt="image" src="https://github.com/user-attachments/assets/c4c412a3-7c08-4921-aff6-23894f1ff080">
 知识库和文档搜索
 <img width="1695" alt="image" src="https://github.com/user-attachments/assets/56339017-5615-4900-ba53-c411b506eb36">
+通知窗口
+![image](https://github.com/user-attachments/assets/ec28d884-bc6b-4b6d-9e1d-0d73bee93173)
+
 
 
