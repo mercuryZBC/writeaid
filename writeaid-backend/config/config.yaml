@@ -1,0 +1,52 @@
+#server:
+# port: 8000
+#database:
+# host: "db"  # 使用 mysql 服务的容器名 "db"
+# port: "3306"
+# user: "root"
+# password: "12345678"
+# dbname: "yuquepp"
+#redis:
+# host: "redis"  # 使用 redis 服务的容器名 "redis"
+# port: "6379"
+# password: ""
+# db: 0
+#document_store_path: "./data/document"
+#elasticsearch:
+# address: "http://es:9200"  # 使用 Elasticsearch 服务的容器名 "es"
+
+# 本地开发调试使用
+server:
+   port: 8000
+database:
+   host: "localhost"
+   port: "3306"
+   user: "root"
+   password: "12345678"
+   dbname: "yuquepp"
+redis:
+   host: "localhost"
+   port: "6379"
+   password: ""
+   db: 0
+document_store_path: "./data/document"
+elasticsearch:
+   address: "http://localhost:9200"
+
+
+user_service:
+   address: "127.0.0.1:8001"
+   port: ":8001"
+notification_service:
+   address: "127.0.0.1:8002"
+   port: ":8002"
+knowledge_base_service:
+   address: "127.0.0.1:8003"
+   port: ":8003"
+
+
+logfile_path:
+   db: ./log/db.log
+   user_service: ./log/user_service.log
+   notification_service: ./log/notification_service.log
+   knowledge_base_service: ./log/knowledge_base_service.log

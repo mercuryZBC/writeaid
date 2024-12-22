@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package knowledgeBaseService;
+option go_package = "./";
+
+enum Status {
+  CREATE_OK = 0;
+  CREATE_ERROR = 1;
+  GET_LIST_OK = 2;
+  GET_LIST_ERROR = 3;
+  GET_DETAIL_OK = 4;
+  GET_DETAIL_ERROR = 5;
+  DELETE_OK = 6;
+  DELETE_ERROR = 7;
+  UPDATE_OK = 8;
+  UPDATE_ERROR = 9;
+}
+
+message KnowledgeBase{
+  int64  kbId =1;
+  string kbName =2;
+  int64 kbOwnerId = 3;
+  string kbDescription = 4;
+  bool kbIsPublic = 5;
+  int64 kbCreateAt = 6;
+  int64 kbUpdateAt = 7;
+}
+
+service KnowledgeService{
+  rpc CreateKnowledgeBase (CreateKnowledgeBaseReq) returns(CreateKnowledgeBaseResp);
+  rpc GetKnowledgeBaseList (GetKnowledgeBaseListReq) returns (GetKnowledgeBaseListResp);
+  rpc GetKnowledgeBaseDetail (GetKnowledgeBaseDetailReq) returns (GetKnowledgeBaseDetailResp);
+  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseReq) returns (DeleteKnowledgeBaseResp);
+  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseReq) returns (UpdateKnowledgeBaseResp);
+}
+
+
+message CreateKnowledgeBaseReq{
+    KnowledgeBase knowledgeBase =1;
+}
+message CreateKnowledgeBaseResp{
+  Status status = 1;
+  KnowledgeBase knowledgeBase = 2;
+}
+
+message GetKnowledgeBaseListReq{
+  int64 userId = 1;
+}
+message GetKnowledgeBaseListResp{
+  Status status = 1;
+  repeated KnowledgeBase knowledgeBases = 2;
+}
+message GetKnowledgeBaseDetailReq{
+  int64 userId = 1;
+  int64 kbId = 2;
+}
+message GetKnowledgeBaseDetailResp{
+  Status status = 1;
+  KnowledgeBase knowledgeBase = 2;
+}
+message DeleteKnowledgeBaseReq{
+  int64 userId = 1;
+  int64 kbId = 2;
+}
+message DeleteKnowledgeBaseResp{
+  Status status = 1;
+}
+message UpdateKnowledgeBaseReq{
+  KnowledgeBase knowledgeBase = 1;
+}
+message UpdateKnowledgeBaseResp{
+  Status status = 1;
+  KnowledgeBase knowledgeBase = 2;
+}

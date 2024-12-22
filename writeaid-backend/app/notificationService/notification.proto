@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package notificationService;
+option go_package = "./";
+
+enum Status {
+  PUSH_OK = 0;
+  PUSH_ERROR = 1;
+  PULL_OK = 2;
+  PULL_ERROR = 3;
+}
+enum NotifyType{
+  COMMENT = 0;
+  DOCUMENT = 1;
+  KNOWLEDGE_BASE = 2;
+  SYSTEM = 3;
+}
+enum KnowLedgeBaseOperate{
+  KB_CREATE = 0;
+  KB_VIEW = 1;
+  KB_EDIT = 2;
+  KB_DELETE = 3;
+}
+enum DocumentOperate{
+  DOC_CREATE = 0;
+  DOC_VIEW = 1;
+  DOC_EDIT = 2;
+  DOC_DELETE = 3;
+}
+
+message PullContent{
+  NotifyType type = 1;
+  string messageContent = 2;
+  int64 time = 3;
+  string link = 4;
+  string linkDescribe = 5;
+  bool isCheck = 6;
+  string avatarLink = 7;
+}
+
+service NotificationService{
+  rpc PushKnowledgeBaseOperate (PushKnowledgeBaseOperateReq) returns (PushKnowledgeBaseOperateResp);
+  rpc PushDocumentOperate (PushDocumentOperateReq) returns (PushDocumentOperateResp);
+  rpc PushComment (PushCommentReq) returns (PushCommentResp);
+  rpc Pull (PullReq) returns (PullResp);
+  rpc PullNotificationCount (PullNotificationCountReq) returns (PullNotificationCountResp);
+}
+
+message PushKnowledgeBaseOperateReq{
+  int64 userId = 1;
+  int64 knowledgeBaseId = 2;
+  string knowledgeBaseName = 3;
+  KnowLedgeBaseOperate operate = 4;
+  int64 time = 5;
+}
+message PushKnowledgeBaseOperateResp{
+  Status status = 1;
+}
+
+message PushDocumentOperateReq{
+  int64 userId = 1;
+  int64 documentId = 2;
+  int64 documentName = 3;
+  DocumentOperate operate = 4;
+  int64 time = 5;
+}
+
+message PushDocumentOperateResp{
+  Status status = 1;
+}
+
+message PushCommentReq{
+  int64 userId = 1;
+  int64 commentUserId = 2;
+  int64 documentId = 3;
+  int64 commentTime = 4;
+  string commentContent = 5;
+}
+
+message PushCommentResp{
+  Status status = 1;
+}
+
+message PullReq{
+  int64 userId = 1;
+}
+
+message PullResp{
+  Status status = 1;
+  repeated PullContent pullContent = 2;
+}
+
+message PullNotificationCountReq{
+  int64 userId = 1;
+}
+
+message PullNotificationCountResp{
+  Status status = 1;
+  int64 count = 2;
+}
+

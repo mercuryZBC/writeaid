@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package userService;
+option go_package = "./";
+enum Status {
+  REGISTER_OK = 0;
+  REGISTER_USER_EXIST = 1;
+  REGISTER_ERROR = 2;
+
+  LOGIN_OK = 3;
+  LOGIN_INFO_ERROR = 4;
+  LOGIN_ERROR = 5;
+}
+
+message RegisterReq{
+  string email = 1;
+  string nickname = 2;
+  string password = 3;
+}
+
+message RegisterResp{
+  Status status = 1;
+}
+
+message LoginReq{
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResp{
+  Status status = 1;
+  string accessToken = 2;
+  int64 expiresIn = 3;
+}
+
+service UserService {
+  rpc Register (RegisterReq) returns (RegisterResp);
+  rpc Login (LoginReq) returns (LoginResp);
+}

@@ -1,41 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Button, Avatar, Dropdown, Menu, Badge, message, Spin } from 'antd';
+import { Layout, Button, Avatar, Dropdown, Menu, Badge, message, Spin, Modal, List } from 'antd';
 import { FileAddOutlined, UploadOutlined, BellOutlined, PoweroffOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as jwt from "../util/jwt";
 import * as userService from "../services/userService";
+import * as notificationService from "../services/notificationService";
 import NewModel from "./models/NewModel";
-import {delToken} from "../util/jwt";
+import { delToken } from "../util/jwt";
 
 const { Header } = Layout;
 
 const NavigatorBar = () => {
     const navigate = useNavigate();
     const [isNewModalVisible, setIsNewModalVisible] = useState(false);
-    const [username, setUsername] = useState(null); // 存储用户名
-    const [loading, setLoading] = useState(true); // 加载状态
+    const [username, setUsername] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [isNotificationModalVisible, setIsNotificationModalVisible] = useState(false);
+    const [notifications, setNotifications] = useState([]);
 
-    // 获取用户信息
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await userService.getUserInfo();
-                if (response.status === 200) {
-                    setUsername(response.data['nickname'] || "未命名用户"); // 假设返回的用户名字段为 `username`
-                }
-            } catch (error) {
-                if(error.response && error.response.status === 401) {
-                    delToken();
-                    navigate('/login')
-                }else{
-                    message.error(error.response?.data?.error || "获取用户数据失败");
-                }
-            } finally {
-                setLoading(false);
+    const fetchUserInfo = async () => {
+        try {
+            const response = await userService.getUserInfo();
+            if (response.status === 200) {
+                setUsername(response.data['nickname'] || "未命名用户");
             }
-        };
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                delToken();
+                navigate('/login');
+            } else {
+                message.error(error.response?.data?.error || "获取用户数据失败");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const fetchNotifications = async () => {
+        try {
+            const response = await notificationService.getNotifications();
+            if (response.status === 200) {
+                const formattedNotifications = response.data["nt_content"].map((item) => ({
+                    ...item,
+                    nt_time: new Date(item.nt_time * 1000).toLocaleString(),
+                }));
+                setNotifications(formattedNotifications);
+                console.log(formattedNotifications);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                delToken();
+                navigate('/login');
+            } else {
+                console.log(error.response?.data?.error || "获取通知数据失败");
+            }
+        }
+    };
+
+    const fetchNotificationCount = async () => {
+        try {
+            const response = await notificationService.getNotificationCount();
+            if (response.status === 200) {
+                setNotificationCount(response.data["nt_count"]);
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                delToken();
+                navigate('/login');
+            } else {
+                console.log(error.response?.data?.error || "获取通知数量失败");
+            }
+        }
+    };
+
+    useEffect(() => {
         fetchUserInfo();
+        fetchNotificationCount();
+        fetchNotifications();
     }, []);
 
     const showCreateModal = () => {
@@ -59,13 +101,15 @@ const NavigatorBar = () => {
                 navigate('/login');
             }
         }
-
-        console.log('Logging out...');
         navigate('/login');
     };
 
     const handleNotificationClick = () => {
-        console.log('Viewing notifications...');
+        setIsNotificationModalVisible(true);
+    };
+
+    const handleNotificationModalClose = () => {
+        setIsNotificationModalVisible(false);
     };
 
     const handleAvatarClick = () => {
@@ -85,7 +129,6 @@ const NavigatorBar = () => {
 
     return (
         <Header style={{ padding: '0 16px', background: '#fff', display: 'flex', justifyContent: 'space-between' }}>
-            {/* 左侧按钮区域 */}
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Button
                     icon={<FileAddOutlined />}
@@ -99,10 +142,8 @@ const NavigatorBar = () => {
                     导入
                 </Button>
             </div>
-
-            {/* 右侧按钮区域 */}
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Badge count={5} style={{ marginRight: '16px' }}>
+                <Badge count={notificationCount} style={{ marginRight: '16px' }}>
                     <Button
                         type="text"
                         icon={<BellOutlined style={{ fontSize: '24px', color: '#08c'}} />}
@@ -124,9 +165,27 @@ const NavigatorBar = () => {
                     />
                 </Dropdown>
             </div>
-
-            {/* 创建弹窗 */}
             <NewModel visable={isNewModalVisible} onClose={handleCreateCancel} />
+            <Modal
+                title="通知"
+                visible={isNotificationModalVisible}
+                footer={null}
+                onCancel={handleNotificationModalClose}
+            >
+                <List
+                    dataSource={notifications}
+                    renderItem={(item) => (
+                        <List.Item key={item.nt_time}>
+                            <List.Item.Meta
+                                avatar={<Avatar src={item.nt_avatar_link} />}
+                                title={<a href={item.nt_link}>{item.nt_message_content}</a>}
+                                description={`${item.nt_time} - ${item.nt_link_describe}`}
+                            />
+                            {!item.nt_is_check && <Badge color="red" text="未读" />}
+                        </List.Item>
+                    )}
+                />
+            </Modal>
         </Header>
     );
 };

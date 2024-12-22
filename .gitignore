@@ -7,6 +7,7 @@
 /writeaid-frontend/.idea/
 # Backend-specific ignore rules
 /writeaid-backend/data
+/writeaid-backend/log
 /writeaid-backend/.env*
 /writeaid-backend/npm-debug.log*
 /writeaid-backend/yarn-debug.log*
