@@ -16,7 +16,7 @@ orm框架：Gorm
 
 搜索引擎：ElasticSearch
 ## 项目部署
-本项目支持不是在Linux平台或MacOS平台，在部署前用户需要安装docker，docker-compose，nodejs，npm
+本项目支持在Linux平台或MacOS平台部署，在部署前用户需要安装docker，docker-compose，nodejs，npm
 ```bash
 #执行一键部署脚本
 ./deploy.sh
