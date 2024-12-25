@@ -42,7 +42,8 @@ Dashboard页面
 知识库和文档搜索
 <img width="1695" alt="image" src="https://github.com/user-attachments/assets/56339017-5615-4900-ba53-c411b506eb36">
 通知窗口
-![image](https://github.com/user-attachments/assets/ec28d884-bc6b-4b6d-9e1d-0d73bee93173)
+![image](https://github.com/user-attachments/assets/a758a695-6a24-4925-9c3c-2a63fcfd4c15)
+
 
 
 
