@@ -34,16 +34,12 @@ orm框架：Gorm
 ![image](https://github.com/user-attachments/assets/2b063fb0-f30c-4a1e-a560-0922b194fcd4)
 ## 项目图片
 Dashboard页面
-![image]("https://github.com/user-attachments/assets/0f10be39-4a76-408a-8f35-6ffd7f43789e")
+<img width="1697" alt="image" src="https://github.com/user-attachments/assets/0f10be39-4a76-408a-8f35-6ffd7f43789e">
 文档预览页面
-![image]("https://github.com/user-attachments/assets/2d56657d-00bd-4f78-a5fc-bfb09715c887")
+<img width="1695" alt="image" src="https://github.com/user-attachments/assets/2d56657d-00bd-4f78-a5fc-bfb09715c887">
 文档编辑页面
-![image]("https://github.com/user-attachments/assets/c4c412a3-7c08-4921-aff6-23894f1ff080")
+<img width="1692" alt="image" src="https://github.com/user-attachments/assets/c4c412a3-7c08-4921-aff6-23894f1ff080">
 通知窗口
 ![image](https://github.com/user-attachments/assets/918f4d00-bc05-46cb-bb4f-75a811e3e80f)
 知识库和文档搜索
 ![image](https://github.com/user-attachments/assets/a758a695-6a24-4925-9c3c-2a63fcfd4c15)
-
-
-
-
