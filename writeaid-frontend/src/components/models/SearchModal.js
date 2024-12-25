@@ -3,6 +3,7 @@ import { Modal, Input, message, List, Typography, Row, Col, Space, Button, Avata
 import { personalDocumentSearch, personalKnowledgeSearch } from "../../services/searchService";
 import { FileOutlined, BookOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";  // 导入 useNavigate
+import '../../App.css'; // 假设你有一个外部 CSS 文件
 
 const { Title, Text } = Typography;
 
@@ -86,7 +87,9 @@ const SearchModal = ({ visible, onClose }) => {
                             <div style={{ display: "flex", alignItems: "center" }}>
                                 <Avatar icon={<FileOutlined style={{ fontSize: 20, color: "#1890ff" }} />} />
                                 <div style={{ marginLeft: 12 }}>
-                                    <Text strong>{item.doc_title}</Text>
+                                    <Text strong>
+                                        <span dangerouslySetInnerHTML={{__html: item.highlight_title}}></span>
+                                    </Text>
                                     <br />
                                     <Text type="secondary">{item.kb_name || "无知识库"}</Text>
                                 </div>
@@ -118,7 +121,9 @@ const SearchModal = ({ visible, onClose }) => {
                             <div style={{ display: "flex", alignItems: "center" }}>
                                 <Avatar icon={<BookOutlined style={{ fontSize: 20, color: "#1890ff" }} />} />
                                 <div style={{ marginLeft: 12 }}>
-                                    <Text strong>{item.kb_name}</Text>
+                                    <Text strong>
+                                        <span dangerouslySetInnerHTML={{ __html: item.highlight_kb_name }} />
+                                    </Text>
                                 </div>
                             </div>
                             <Text type="secondary">

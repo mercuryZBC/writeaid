@@ -33,7 +33,6 @@ func GetElasticSearchClient() *elasticsearch.Client {
 			log.Fatalf("Error getting response: %s", err)
 		}
 		defer res.Body.Close()
-		fmt.Println(res)
 		if esClient == nil {
 			panic("elasticSearch client not initialized")
 		}
@@ -76,12 +75,12 @@ func checkAndCreateIndex(es *elasticsearch.Client, indexName string) error {
 						"title": map[string]interface{}{
 							"type":     "text",
 							"index":    true,
-							"analyzer": "standard",
+							"analyzer": "ik_smart",
 						},
 						"content": map[string]interface{}{
 							"type":     "text",
 							"index":    true,
-							"analyzer": "standard",
+							"analyzer": "ik_smart",
 						},
 					},
 				},
@@ -100,12 +99,12 @@ func checkAndCreateIndex(es *elasticsearch.Client, indexName string) error {
 						"kb_name": map[string]interface{}{
 							"type":     "text",
 							"index":    true,
-							"analyzer": "standard",
+							"analyzer": "ik_smart",
 						},
 						"kb_description": map[string]interface{}{
 							"type":     "text",
 							"index":    true,
-							"analyzer": "standard",
+							"analyzer": "ik_smart",
 						},
 					},
 				},

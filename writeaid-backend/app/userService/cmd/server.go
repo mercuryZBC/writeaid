@@ -26,7 +26,7 @@ func init() {
 }
 
 func logFormat(funcName, result string, v ...interface{}) string {
-	return fmt.Sprintf(funcName, ":", "用户信息 ", v, result)
+	return fmt.Sprint(funcName, ":", "用户信息 ", v, result)
 }
 
 // Register方法
@@ -103,8 +103,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterUserServiceServer(grpcServer, &userServiceServer{})
-
-	log.Println("userService server is running on port 8001")
+	fmt.Println("userService server is running on port 8001")
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("Failed to userService serve: %v", err)
 	}

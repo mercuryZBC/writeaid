@@ -51,7 +51,6 @@ func GetDB() *gorm.DB {
 		if err != nil {
 			log.Fatalf("failed to connect to database: %v", err)
 		}
-		log.Println("Successfully connected to database")
 		if err := models.MigrateDB(dbInstance); err != nil {
 			log.Fatalf("failed to migrate database: %v", err)
 		}

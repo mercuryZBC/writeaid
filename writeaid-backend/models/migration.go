@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"gorm.io/gorm"
-	"log"
 	"time"
 )
 
@@ -42,6 +41,6 @@ func MigrateDB(db *gorm.DB) error {
 		return err
 	}
 
-	log.Printf("迁移版本 %s 已应用\n", version)
+	//log.Printf("迁移版本 %s 已应用\n", version)
 	return nil
 }

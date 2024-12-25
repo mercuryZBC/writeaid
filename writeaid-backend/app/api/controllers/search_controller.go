@@ -19,7 +19,7 @@ func NewSearchController(dao *dao.SearchDao) *SearchController {
 func (sc *SearchController) PersonalSearchKnowledgeBaseHandler(c *gin.Context) {
 	searchText := c.Param("search_text")
 	var strKBIds []string
-	strKBIds, err := sc.dao.GetKnowledgeBaseIDByName(searchText)
+	strKBIds, highlightKbNames, err := sc.dao.GetKnowledgeBaseIDByName(searchText)
 	if err != nil {
 		log.Println(err)
 		c.JSON(500, gin.H{"error": "系统错误，请稍后再试"})
@@ -29,7 +29,7 @@ func (sc *SearchController) PersonalSearchKnowledgeBaseHandler(c *gin.Context) {
 	kbDao := dao.NewKBDAO(util.GetDB(), util.GetElasticSearchClient())
 
 	var kbInfo []map[string]interface{}
-	for _, strKbId := range strKBIds {
+	for idx, strKbId := range strKBIds {
 		kbId, err := strconv.ParseInt(strKbId, 10, 64)
 		if err != nil {
 			continue
@@ -40,11 +40,12 @@ func (sc *SearchController) PersonalSearchKnowledgeBaseHandler(c *gin.Context) {
 			return
 		}
 		kbInfo = append(kbInfo, map[string]interface{}{
-			"kb_id":          kbId,
-			"kb_name":        kb.Name,
-			"kb_description": kb.Description,
-			"kb_updated_at":  kb.UpdatedAt,
-			"kb_created_at":  kb.CreatedAt,
+			"kb_id":             kbId,
+			"kb_name":           kb.Name,
+			"highlight_kb_name": highlightKbNames[idx],
+			"kb_description":    kb.Description,
+			"kb_updated_at":     kb.UpdatedAt,
+			"kb_created_at":     kb.CreatedAt,
 		})
 	}
 	c.JSON(200, gin.H{"knowledgeBases": kbInfo})
@@ -53,7 +54,7 @@ func (sc *SearchController) PersonalSearchKnowledgeBaseHandler(c *gin.Context) {
 func (sc *SearchController) PersonalSearchDocumentTitleHandler(c *gin.Context) {
 	searchText := c.Param("search_text")
 	var strDocIds []string
-	strDocIds, err := sc.dao.GetDocIDByTitleFuzzy(searchText)
+	strDocIds, hightDocTities, err := sc.dao.GetDocIDByTitleFuzzy(searchText)
 	if err != nil {
 		log.Println(err)
 		c.JSON(500, gin.H{"error": "系统错误，请稍后再试"})
@@ -63,7 +64,7 @@ func (sc *SearchController) PersonalSearchDocumentTitleHandler(c *gin.Context) {
 
 	docDao := dao.NewDocDao(util.GetDB(), util.GetElasticSearchClient())
 	var docInfo []map[string]interface{}
-	for _, strDocId := range strDocIds {
+	for idx, strDocId := range strDocIds {
 		docId, err := strconv.ParseInt(strDocId, 10, 64)
 		if err != nil {
 			continue
@@ -74,11 +75,12 @@ func (sc *SearchController) PersonalSearchDocumentTitleHandler(c *gin.Context) {
 			return
 		}
 		docInfo = append(docInfo, map[string]interface{}{
-			"doc_id":         strDocId,
-			"doc_title":      doc.Title,
-			"doc_created_at": doc.CreatedAt,
-			"doc_updated_at": doc.UpdatedAt,
-			"kb_name":        doc.KnowledgeBase.Name,
+			"doc_id":          strDocId,
+			"doc_title":       doc.Title,
+			"highlight_title": hightDocTities[idx],
+			"doc_created_at":  doc.CreatedAt,
+			"doc_updated_at":  doc.UpdatedAt,
+			"kb_name":         doc.KnowledgeBase.Name,
 		})
 	}
 	c.JSON(200, gin.H{"documents": docInfo})
