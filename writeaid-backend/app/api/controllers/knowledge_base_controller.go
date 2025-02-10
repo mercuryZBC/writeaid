@@ -12,12 +12,15 @@ import (
 	pb "writeaid-backend/app/knowledgeBaseService"
 	"writeaid-backend/config"
 	"writeaid-backend/dao"
+	"writeaid-backend/util"
 )
 
 type KnowledgeBaseController struct {
 	kbDao          *dao.KBDAO
 	kbSeviceClient pb.KnowledgeServiceClient
 }
+
+var docDao *dao.DocDao = dao.NewDocDao(util.GetDB(), util.GetElasticSearchClient())
 
 func NewKnowledgeBaseController(dao *dao.KBDAO) *KnowledgeBaseController {
 	// 连接 gRPC 服务器
@@ -193,6 +196,23 @@ func (kc *KnowledgeBaseController) DeleteKnowledgeBase(c *gin.Context) {
 	kbId64, err := strconv.ParseInt(contextData.KBId, 10, 64) // 10 是十进制，64 表示返回 int64 类型
 	if err != nil {
 		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "系统错误"})
+		return
+	}
+	docs, err := docDao.GetDocumentsByKnowledgeBaseID(kbId64)
+	for _, doc := range docs {
+		err := docDao.DeleteDocumentByID(doc.ID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "系统错误"})
+			return
+		}
+		err = docDao.DeleteDocFromES(doc.ID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "系统错误"})
+			return
+		}
+	}
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "系统错误"})
 		return
 	}

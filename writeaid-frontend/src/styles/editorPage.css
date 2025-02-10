@@ -1,0 +1,20 @@
+.navigatorBar {
+    display: flex;
+    /*justify-content: space-between;*/
+    align-items: flex-end;  /* 使字体居下 */
+    height: 50px;  /* 给导航栏一个固定高度 */
+    border-bottom: 1px solid #ddd;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 0 20px;  /* 设置左右内边距 */
+}
+
+.docTitle {
+    flex-grow: 1;
+}
+
+.saveStatus {
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+}

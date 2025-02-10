@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Button, Avatar, Dropdown, Menu, Badge, message, Spin, Modal, List } from 'antd';
-import { FileAddOutlined, UploadOutlined, BellOutlined, PoweroffOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Button, Avatar, Dropdown, Badge, message, Spin } from 'antd';
+import { FileAddOutlined, UploadOutlined, BellOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as jwt from "../util/jwt";
 import * as userService from "../services/userService";
 import * as notificationService from "../services/notificationService";
 import NewModel from "./models/NewModel";
+import UserMenu from '../components/menus/UserMenu';
+import NotificationModal from '../components/models/NotificationModal';
 import { delToken } from "../util/jwt";
 
 const { Header } = Layout;
@@ -116,17 +118,6 @@ const NavigatorBar = () => {
         console.log('Viewing profile...');
     };
 
-    const userMenu = (
-        <Menu>
-            <Menu.Item onClick={handleAvatarClick} icon={<UserOutlined />}>
-                个人资料
-            </Menu.Item>
-            <Menu.Item onClick={handleLogout} icon={<PoweroffOutlined />}>
-                退出登录
-            </Menu.Item>
-        </Menu>
-    );
-
     return (
         <Header style={{ padding: '0 16px', background: '#fff', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -156,7 +147,7 @@ const NavigatorBar = () => {
                 ) : (
                     <span style={{ marginRight: '16px', fontWeight: 'bold' }}>{username}</span>
                 )}
-                <Dropdown overlay={userMenu} trigger={['click']}>
+                <Dropdown overlay={<UserMenu handleAvatarClick={handleAvatarClick} handleLogout={handleLogout} />} trigger={['click']}>
                     <Avatar
                         style={{ backgroundColor: '#87d068', cursor: 'pointer' }}
                         icon={<UserOutlined />}
@@ -166,26 +157,11 @@ const NavigatorBar = () => {
                 </Dropdown>
             </div>
             <NewModel visable={isNewModalVisible} onClose={handleCreateCancel} />
-            <Modal
-                title="通知"
-                visible={isNotificationModalVisible}
-                footer={null}
-                onCancel={handleNotificationModalClose}
-            >
-                <List
-                    dataSource={notifications}
-                    renderItem={(item) => (
-                        <List.Item key={item.nt_time}>
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.nt_avatar_link} />}
-                                title={<a href={item.nt_link}>{item.nt_message_content}</a>}
-                                description={`${item.nt_time} - ${item.nt_link_describe}`}
-                            />
-                            {!item.nt_is_check && <Badge color="red" text="未读" />}
-                        </List.Item>
-                    )}
-                />
-            </Modal>
+            <NotificationModal
+                isVisible={isNotificationModalVisible}
+                notifications={notifications}
+                handleClose={handleNotificationModalClose}
+            />
         </Header>
     );
 };

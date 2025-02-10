@@ -20,6 +20,9 @@ func NewUserDao(db *gorm.DB, esClient *elasticsearch.Client) *UserDAO {
 // 校验密码是否匹配
 func (dao *UserDAO) CheckPassword(user models.User) (bool, error) {
 	tmpUser, err := dao.GetUserByEmail(user.Email)
+	if tmpUser == nil {
+		return false, errors.New("用户不存在")
+	}
 	if err != nil {
 		return false, err
 	}

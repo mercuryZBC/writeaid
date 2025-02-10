@@ -26,31 +26,22 @@ func NewUserController(dao *dao.UserDAO) *UserController {
 		log.Fatalf("Failed to connect: %v", err)
 	}
 	client := pb.NewUserServiceClient(conn)
-	// 预热请求
-	_, err = client.Register(context.Background(), &pb.RegisterReq{})
-	if err != nil {
-		log.Fatalf("Failed to register user: %v", err)
-	} else {
-		log.Println("user service connect success")
-	}
 	return &UserController{dao: dao, userServiceClient: client}
 }
 
 func (uc *UserController) GetUserInfo(c *gin.Context) {
-	var contextData struct {
+	var requestData struct {
 		Id    int64  `json:"userid"`
 		Email string `json:"email"`
 	}
 	// 从上下文中获取数据
 	if userID, exists := c.Get("userid"); exists {
-		contextData.Id = userID.(int64) // 获取并赋值
+		requestData.Id = userID.(int64) // 获取并赋值
 	}
-
 	if email, exists := c.Get("email"); exists {
-		contextData.Email = email.(string) // 获取并赋值
+		requestData.Email = email.(string) // 获取并赋值
 	}
-
-	user, err := uc.dao.GetUserByID(contextData.Id)
+	user, err := uc.dao.GetUserByID(requestData.Id)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "系统错误请稍后再试"})
@@ -72,37 +63,36 @@ func (uc *UserController) Logout(c *gin.Context) {
 
 // 用户注册
 func (uc *UserController) Register(c *gin.Context) {
-	var registerData struct {
+	var requestData struct {
 		Email        string `json:"email" binding:"required"`
 		Nickname     string `json:"nickname" binding:"required"`
 		Password     string `json:"password" binding:"required"`
 		CaptchaId    string `json:"captchaId" binding:"required"`
 		CaptchaValue string `json:"captchaValue" binding:"required"`
 	}
-	if err := c.ShouldBindJSON(&registerData); err != nil {
-		log.Println("数据绑定失败")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		log.Println("请求参数错误" + err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误"})
 		return
 	}
-	log.Println(registerData)
+	log.Println(requestData)
 	// 确认验证码是否正确
-	right, err := VerifyCaptcha(registerData.CaptchaId, registerData.CaptchaValue)
+	right, err := VerifyCaptcha(requestData.CaptchaId, requestData.CaptchaValue)
 	if err != nil {
-		log.Println("验证码模块错误")
+		log.Println("验证码模块错误：" + err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "系统错误请稍后再试"})
 		return
 	}
 	if !right {
-		log.Println("验证码错误")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "验证码错误"})
 		return
 	}
 
 	registerResp, err := uc.userServiceClient.Register(context.Background(),
 		&pb.RegisterReq{
-			Email:    registerData.Email,
-			Nickname: registerData.Nickname,
-			Password: registerData.Password,
+			Email:    requestData.Email,
+			Nickname: requestData.Nickname,
+			Password: requestData.Password,
 		})
 	if err != nil || registerResp == nil {
 		log.Println(err)
@@ -118,7 +108,7 @@ func (uc *UserController) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "用户邮箱已注册，请直接登录"})
 		return
 	} else {
-		log.Println("系统错误")
+		log.Println("用户注册服务错误")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "用户注册失败"})
 		return
 	}
@@ -152,8 +142,18 @@ func (uc *UserController) Login(c *gin.Context) {
 			Password: loginData.Password,
 		})
 	if err != nil || loginResp == nil {
+		if loginResp != nil {
+			if loginResp.Status == pb.Status_LOGIN_ERROR {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "登录失败，请稍后再试"})
+				return
+			}
+			if loginResp.Status == pb.Status_LOGIN_INFO_ERROR {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "用户名或密码错误"})
+				return
+			}
+		}
 		log.Println(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "登录失败请稍后重试"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	if loginResp.Status == pb.Status_LOGIN_OK {

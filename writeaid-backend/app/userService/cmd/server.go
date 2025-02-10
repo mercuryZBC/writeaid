@@ -62,12 +62,12 @@ func (s *userServiceServer) Login(ctx context.Context, req *pb.LoginReq) (*pb.Lo
 	pass, err := userDao.CheckPassword(user)
 	if err != nil {
 		log.Println(logFormat("用户登录", err.Error(), req))
-		return &pb.LoginResp{Status: pb.Status_LOGIN_ERROR}, err
+		return &pb.LoginResp{Status: pb.Status_LOGIN_INFO_ERROR}, err
 	}
 	// 验证失败
 	if !pass {
 		log.Println(logFormat("用户登录", "用户信息错误", req))
-		return &pb.LoginResp{Status: pb.Status_LOGIN_INFO_ERROR}, nil
+		return &pb.LoginResp{Status: pb.Status_LOGIN_INFO_ERROR}, err
 	}
 
 	//验证成功

@@ -41,3 +41,20 @@ highlight {
   color: cornflowerblue;
   font-weight: bold;
 }
+
+/* 去掉编辑器边框 */
+#vditor {
+  border: none;
+}
+
+/* 如果需要去掉编辑区域的边框 */
+.vditor-editor {
+  border: none;
+  background-color: #f0f0f0;
+}
+
+/* 去掉工具栏的边框（如果有的话） */
+.vditor-toolbar {
+  border: none;
+  background-color: #f0f0f0;
+}
