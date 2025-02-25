@@ -50,7 +50,7 @@ Dashboard页面
 文档预览页面
 ![](https://bucket-2519.oss-cn-beijing.aliyuncs.com/writeaid-doc-view.png)
 文档编辑页面
-![](https://bucket-2519.oss-cn-beijing.aliyuncs.com/writeaid-doc-edit.png)
+![](https://bucket-2519.oss-cn-beijing.aliyuncs.com/202502251824689.png)
 通知窗口
 ![](https://bucket-2519.oss-cn-beijing.aliyuncs.com/writeaid-notification.png)
 知识库和文档搜索
